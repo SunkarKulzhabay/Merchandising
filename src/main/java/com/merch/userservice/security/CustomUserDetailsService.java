@@ -1,6 +1,6 @@
 package com.merch.userservice.security;
 
-import com.merch.userservice.model.User;
+import com.merch.userservice.entity.User;
 import com.merch.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

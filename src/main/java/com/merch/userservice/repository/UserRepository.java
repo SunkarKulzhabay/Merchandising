@@ -1,6 +1,6 @@
 package com.merch.userservice.repository;
 
-import com.merch.userservice.model.User;
+import com.merch.userservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

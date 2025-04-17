@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торговые точки</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Список торговых точек</h1>
+
+    <form action="/add-store" method="post">
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" placeholder="Название торговой точки" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить торговую точку</button>
+    </form>
+
+    <ul class="list-group mt-4">
+        <li class="list-group-item active">Список торговых точек</li>
+        <th:block th:each="store : ${stores}">
+            <li class="list-group-item" th:text="${store.name}"></li>
+        </th:block>
+    </ul>
+</div>
+</body>
+</html>
