@@ -1,5 +1,6 @@
-package com.merch.userservice.model;
+package com.merch.userservice.entity;
 
+import com.merch.userservice.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
