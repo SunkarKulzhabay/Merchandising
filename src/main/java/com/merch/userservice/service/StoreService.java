@@ -21,4 +21,8 @@ public class StoreService {
         Store store = new Store(name); // Создаем новую точку
         storeRepository.save(store); // Сохраняем в базу данных
     }
+    public void deleteStoreById(Long id) {
+        storeRepository.deleteById(id);
+    }
+
 }
