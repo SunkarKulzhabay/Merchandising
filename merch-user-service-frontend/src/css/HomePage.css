@@ -1,0 +1,72 @@
+/* HomePage.css */
+
+.home-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #fff8f0, #ffe4cc);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.home-user-info {
+    margin-bottom: 20px;
+}
+
+.home-username {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff6600;
+}
+
+.home-please-login {
+    font-size: 1.2rem;
+    color: #ff8c42;
+}
+
+.home-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff6600;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+@media (min-width: 640px) {
+    .home-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    .home-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.home-card {
+    background-color: #ff6600;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(255, 102, 0, 0.4);
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-card:hover {
+    background-color: #e65c00;
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(230, 92, 0, 0.5);
+}

@@ -1,0 +1,78 @@
+/* Основные стили */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Заголовки */
+h2 {
+    font-size: 1.875rem; /* 30px */
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #1D4ED8; /* Цвет синим */
+}
+
+/* Состояния загрузки и ошибок */
+.text-center {
+    text-align: center;
+}
+
+.text-gray-600 {
+    color: #4B5563; /* Темно-серый текст */
+}
+
+.text-red-500 {
+    color: #EF4444; /* Красный цвет для ошибок */
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+/* Стили для карточки с таблицей */
+.bg-white {
+    background-color: #ffffff;
+}
+
+.p-6 {
+    padding: 24px;
+}
+
+.rounded-lg {
+    border-radius: 8px;
+}
+
+.shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+/* Таблица */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border: 1px solid #E5E7EB; /* Цвет границ таблицы */
+}
+
+th {
+    background-color: #F3F4F6; /* Цвет фона для заголовков таблицы */
+    font-weight: 600;
+    color: #1F2937; /* Цвет текста для заголовков */
+}
+
+tr:hover {
+    background-color: #F9FAFB; /* Подсветка строки при наведении */
+}
+
+tr:nth-child(even) {
+    background-color: #F9FAFB; /* Чередование цветов строк */
+}

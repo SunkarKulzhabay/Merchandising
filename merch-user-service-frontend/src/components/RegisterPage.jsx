@@ -28,38 +28,49 @@ const RegisterPage = () => {
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Username</label>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                         <input
+                            id="username"
                             type="text"
+                            placeholder="Enter your username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             required
                         />
                     </div>
+
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
                         <input
+                            id="fullName"
                             type="text"
+                            placeholder="Enter your full name"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
                             className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             required
                         />
                     </div>
+
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                         <input
+                            id="password"
                             type="password"
+                            placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             required
                         />
                     </div>
+
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Role</label>
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
                         <select
+                            id="role"
+                            title="Select role"
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
@@ -68,6 +79,7 @@ const RegisterPage = () => {
                             <option value="ADMIN">Admin</option>
                         </select>
                     </div>
+
                     <button
                         type="submit"
                         className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"

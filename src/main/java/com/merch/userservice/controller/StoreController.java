@@ -1,36 +1,52 @@
 package com.merch.userservice.controller;
 
-import com.merch.userservice.entity.Store;
 import com.merch.userservice.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stores")
 @RequiredArgsConstructor
 public class StoreController {
+
     private final StoreService storeService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MERCHANDISER')")
     public ResponseEntity<?> getStores() {
         return ResponseEntity.ok(storeService.getAllStores());
     }
 
-
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addStore(@RequestBody Store store) {
-        storeService.addStore(store.getName());
-        return ResponseEntity.ok().build();
+    @PostMapping("/add-store")
+    public ResponseEntity<?> addStore(@RequestBody Map<String, String> request) {
+        try {
+            String name = request.get("name");
+            if (name == null || name.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Название магазина не указано"));
+            }
+            System.out.println("Получено название магазина: " + name);
+            storeService.addStore(name);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.err.println("Ошибка при добавлении магазина: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Ошибка при добавлении магазина: " + e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteStore(@PathVariable Long id) {
-        storeService.deleteStoreById(id);
-        return ResponseEntity.ok().build();
+        try {
+            storeService.deleteStoreById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Ошибка при удалении магазина"));
+        }
     }
 }

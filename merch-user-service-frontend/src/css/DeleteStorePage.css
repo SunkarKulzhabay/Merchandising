@@ -1,0 +1,199 @@
+/* Общие стили для страницы */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1d4ed8; /* Синий цвет */
+    margin-bottom: 1.5rem;
+}
+
+/* Стили для формы */
+.bg-white {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563; /* Темно-серый цвет */
+}
+
+input,
+select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    outline: none;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb; /* Синий цвет при фокусе */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Стили для кнопок */
+button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bg-gray-300 {
+    background-color: #e5e7eb;
+}
+
+.bg-gray-400 {
+    background-color: #d1d5db;
+}
+
+.bg-blue-600 {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.bg-blue-700 {
+    background-color: #1d4ed8;
+}
+
+.bg-red-600 {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.bg-red-700 {
+    background-color: #b91c1c;
+}
+
+/* Модальное окно */
+.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bg-gray-600 {
+    background-color: rgba(31, 41, 55, 0.6); /* Тёмный фон */
+}
+
+.bg-opacity-50 {
+    opacity: 0.5;
+}
+
+.max-w-sm {
+    max-width: 28rem;
+}
+
+.max-w-md {
+    max-width: 32rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-700 {
+    color: #374151;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.text-red-500 {
+    color: #ef4444;
+}
+
+.text-blue-600 {
+    color: #2563eb;
+}
+
+/* Для ошибок и уведомлений */
+.text-center {
+    text-align: center;
+}
+
+.space-x-2 {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+    margin-bottom: 2rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.space-x-2 {
+    gap: 0.5rem;
+}

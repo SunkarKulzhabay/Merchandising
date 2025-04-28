@@ -1,3 +1,4 @@
+import '../css/SchedulePage.css';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -108,58 +109,76 @@ const SchedulePage = () => {
                             {stores.length === 0 ? (
                                 <p className="text-gray-600">No stores available</p>
                             ) : (
-                                stores.map((store) => (
-                                    <label key={store.id} className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedStoreIds.includes(store.id)}
-                                            onChange={() => handleStoreChange(store.id)}
-                                            className="mr-2"
-                                        />
-                                        {store.name}
-                                    </label>
-                                ))
+                                <select
+                                    multiple
+                                    value={selectedStoreIds}
+                                    onChange={(e) =>
+                                        setSelectedStoreIds(
+                                            Array.from(e.target.selectedOptions, (option) => option.value)
+                                        )
+                                    }
+                                    className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    {stores.map((store) => (
+                                        <option key={store.id} value={store.id}>
+                                            {store.name}
+                                        </option>
+                                    ))}
+                                </select>
                             )}
                         </div>
                     </div>
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Tasks</label>
                         <div className="space-y-2">
-                            {[
-                                { value: 'CASH_COUNT', label: 'Count Cash Registers' },
-                                { value: 'CASH_PHOTO', label: 'Cash Register Photo' },
-                                { value: 'ZONE_PHOTO', label: 'Main Zone Photo' },
-                            ].map((task) => (
-                                <label key={task.value} className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedTasks.includes(task.value)}
-                                        onChange={() => handleTaskChange(task.value)}
-                                        className="mr-2"
-                                    />
-                                    {task.label}
-                                </label>
-                            ))}
+                            <select
+                                multiple
+                                value={selectedTasks}
+                                onChange={(e) =>
+                                    setSelectedTasks(
+                                        Array.from(e.target.selectedOptions, (option) => option.value)
+                                    )
+                                }
+                                className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                {[
+                                    { value: 'CASH_COUNT', label: 'Count Cash Registers' },
+                                    { value: 'CASH_PHOTO', label: 'Cash Register Photo' },
+                                    { value: 'ZONE_PHOTO', label: 'Main Zone Photo' },
+                                ].map((task) => (
+                                    <option key={task.value} value={task.value}>
+                                        {task.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Days of Week</label>
                         <div className="space-y-2">
-                            {['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'].map(
-                                (day) => (
-                                    <label key={day} className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedDays.includes(day)}
-                                            onChange={() => handleDayChange(day)}
-                                            className="mr-2"
-                                        />
-                                        {day.charAt(0) + day.slice(1).toLowerCase()}
-                                    </label>
-                                )
-                            )}
+                            <select
+                                multiple
+                                value={selectedDays}
+                                onChange={(e) =>
+                                    setSelectedDays(
+                                        Array.from(e.target.selectedOptions, (option) => option.value)
+                                    )
+                                }
+                                className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                {['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'].map(
+                                    (day) => (
+                                        <option key={day} value={day}>
+                                            {day.charAt(0) + day.slice(1).toLowerCase()}
+                                        </option>
+                                    )
+                                )}
+                            </select>
                         </div>
                     </div>
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Repeat Until</label>
                         <input
@@ -171,6 +190,7 @@ const SchedulePage = () => {
                             required
                         />
                     </div>
+
                     <div className="flex justify-end space-x-2">
                         <button
                             type="button"

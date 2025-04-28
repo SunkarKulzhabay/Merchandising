@@ -1,0 +1,71 @@
+/* Navbar.css */
+
+/* Применяем стиль к navbar */
+.navbar {
+    background-color: #ff6600; /* Оранжевый фон для навигации */
+    padding: 16px 0;
+    box-shadow: 0 4px 8px rgba(255, 102, 0, 0.3);
+}
+
+/* Стили для контейнера внутри navbar */
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Стили для названия бренда */
+.navbar .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Стили для блока ссылок */
+.navbar .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+/* Стили для каждой ссылки и кнопки */
+.navbar .nav-links a,
+.navbar .nav-links button {
+    color: #fff;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Стили для наведения на ссылки и кнопки */
+.navbar .nav-links a:hover,
+.navbar .nav-links button:hover {
+    background-color: #e65c00; /* Темный оранжевый при наведении */
+    transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+/* Активная ссылка */
+.navbar .nav-links .active {
+    font-weight: bold;
+    color: #ffcc00; /* Активная ссылка будет желтой */
+}
+
+/* Стили для кнопки logout */
+.navbar .nav-links .logout-button {
+    background-color: #ff3300;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+/* Стили при наведении на кнопку logout */
+.navbar .nav-links .logout-button:hover {
+    background-color: #e62e00; /* Темный красный при наведении */
+    transform: scale(1.05);
+}

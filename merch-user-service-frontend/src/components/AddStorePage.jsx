@@ -1,3 +1,4 @@
+import '../css/AddStorePage.css';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -14,58 +15,84 @@ const AddStorePage = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
+            console.log('Токен:', token); // Логируем токен
             await axios.post(
-                'http://localhost:8080/add-store',
-                new URLSearchParams({ name: addStoreName }),
+                'http://localhost:8080/api/stores/add-store', // Исправленный URL
+                { name: addStoreName },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                     },
                 }
             );
             setAddStoreName('');
             setError('');
-            navigate('/stores'); // Переход на страницу магазинов после успеха
+            navigate('/stores');
         } catch (err) {
-            setError('Failed to add store. Requires ADMIN role.');
-            console.error(err);
+            console.log('Статус ответа:', err.response?.status);
+            console.log('Данные ответа:', err.response?.data);
+            console.error('Полная ошибка:', err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(`Ошибка: ${err.response.data.message}`);
+            } else if (err.response?.status === 403) {
+                setError('Доступ запрещен: требуется роль ADMIN.');
+            } else if (err.response?.status === 404) {
+                setError('Эндпоинт не найден. Проверьте URL.');
+            } else {
+                setError('Не удалось добавить магазин: ' + (err.message || 'Неизвестная ошибка'));
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="container mx-auto mt-8 p-4">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600">Add Store</h2>
-            {isLoading && <p className="text-center text-gray-600">Loading...</p>}
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
-                <form onSubmit={addStore} className="space-y-4">
+        <div className="add-store-page">
+            <div className="add-store-card">
+                <h2 className="add-store-title">Добавить новый магазин</h2>
+
+                {isLoading && (
+                    <div className="flex justify-center">
+                        <div className="spinner"></div>
+                    </div>
+                )}
+
+                {error && (
+                    <p className="add-store-error">{error}</p>
+                )}
+
+                <form onSubmit={addStore} className="add-store-form">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Store Name</label>
+                        <label htmlFor="storeName" className="add-store-label">
+                            Название магазина
+                        </label>
                         <input
+                            id="storeName"
                             type="text"
                             value={addStoreName}
                             onChange={(e) => setAddStoreName(e.target.value)}
-                            className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            className="add-store-input"
+                            placeholder="Введите название магазина"
                             required
                         />
                     </div>
-                    <div className="flex justify-end space-x-2">
+
+                    <div className="add-store-buttons">
                         <button
                             type="button"
                             onClick={() => navigate('/')}
-                            className="bg-gray-300 text-gray-700 p-2 rounded-lg hover:bg-gray-400"
+                            className="add-store-cancel"
                         >
-                            Cancel
+                            Отмена
                         </button>
+
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+                            className="add-store-submit"
                             disabled={isLoading}
                         >
-                            Add
+                            Добавить магазин
                         </button>
                     </div>
                 </form>

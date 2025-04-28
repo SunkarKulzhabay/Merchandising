@@ -1,3 +1,4 @@
+import '../css/StoresPage.css';
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';

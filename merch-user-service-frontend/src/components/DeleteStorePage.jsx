@@ -1,48 +1,83 @@
-import { useState, useContext } from 'react';
+import '../css/DeleteStorePage.css';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const DeleteStorePage = () => {
     const { token } = useContext(AuthContext);
-    const [deleteStoreId, setDeleteStoreId] = useState('');
+    const [stores, setStores] = useState([]);
+    const [selectedStore, setSelectedStore] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
-    const handleDelete = async () => {
-        setIsLoading(true);
-        try {
-            await axios.post(
-                'http://localhost:8080/delete-store',
-                new URLSearchParams({ id: deleteStoreId }),
-                {
+    useEffect(() => {
+        const fetchStores = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/stores', {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                }
-            );
-            setDeleteStoreId('');
+                });
+                setStores(response.data); // Сохраняем полученные магазины
+            } catch (error) {
+                console.error('Ошибка загрузки магазинов:', error);
+                alert('Произошла ошибка при загрузке магазинов.');
+            }
+        };
+
+        if (token) {
+            fetchStores(); // Выполняем запрос только если токен есть
+        } else {
+            alert('Необходимо авторизоваться.');
+        }
+    }, [token]); // Добавляем токен как зависимость
+
+
+
+    const handleDelete = async () => {
+        console.log('Deleting store:', selectedStore); // Логирование
+        if (!selectedStore) {
+            setError('Выберите магазин для удаления.');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const storeToDelete = stores.find(store => store.name === selectedStore);
+            if (!storeToDelete) {
+                setError('Магазин не найден.');
+                return;
+            }
+
+            await axios.delete(`http://localhost:8080/api/stores/${storeToDelete.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setSelectedStore('');
             setError('');
             setShowModal(false);
-            navigate('/stores'); // Переход на страницу магазинов после успеха
+            navigate('/stores');
         } catch (err) {
-            setError('Failed to delete store. Requires ADMIN role.');
-            console.error(err);
+            console.error('Ошибка удаления магазина:', err);
+            setError('Не удалось удалить магазин. Требуется роль ADMIN или неверное название.');
             setShowModal(false);
         } finally {
             setIsLoading(false);
         }
     };
 
+
     const openModal = (e) => {
         e.preventDefault();
-        if (deleteStoreId) {
+        if (selectedStore) {
             setShowModal(true);
         } else {
-            setError('Please enter a Store ID');
+            setError('Выберите магазин для удаления.');
         }
     };
 
@@ -52,61 +87,78 @@ const DeleteStorePage = () => {
     };
 
     return (
-        <div className="container mx-auto mt-8 p-4">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600">Delete Store</h2>
-            {isLoading && <p className="text-center text-gray-600">Loading...</p>}
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
-                <form onSubmit={openModal} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Store ID</label>
-                        <input
-                            type="number"
-                            value={deleteStoreId}
-                            onChange={(e) => setDeleteStoreId(e.target.value)}
-                            className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            required
-                        />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-lg w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:shadow-2xl">
+                <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-6">Удалить магазин</h2>
+                {isLoading && (
+                    <div className="flex justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
                     </div>
-                    <div className="flex justify-end space-x-2">
+                )}
+                {error && (
+                    <p className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-lg">{error}</p>
+                )}
+                <form onSubmit={openModal} className="space-y-6">
+                    <div>
+                        <label htmlFor="storeSelect" className="block text-sm font-medium text-gray-700">
+                            Выберите магазин для удаления
+                        </label>
+                        <select
+                            id="storeSelect"
+                            value={selectedStore}
+                            onChange={(e) => setSelectedStore(e.target.value)}
+                            className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                            disabled={isLoading}
+                        >
+                            <option value="">Выберите магазин</option>
+                            {stores.map((store) => (
+                                <option key={store.id} value={store.name}>
+                                    {store.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex justify-end space-x-4">
                         <button
                             type="button"
                             onClick={() => navigate('/')}
-                            className="bg-gray-300 text-gray-700 p-2 rounded-lg hover:bg-gray-400"
+                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200"
+                            disabled={isLoading}
                         >
-                            Cancel
+                            Отмена
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={isLoading}
                         >
-                            Delete
+                            Удалить
                         </button>
                     </div>
                 </form>
             </div>
 
-            {/* Модальное окно подтверждения */}
             {showModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-                        <h3 className="text-lg font-bold mb-4 text-gray-800">Confirm Deletion</h3>
-                        <p className="text-gray-600 mb-6">Are you sure you want to delete the store with ID {deleteStoreId}?</p>
-                        <div className="flex justify-end space-x-2">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full transform transition-all">
+                        <h3 className="text-lg font-bold mb-4 text-gray-800">Подтверждение удаления</h3>
+                        <p className="text-gray-600 mb-6">
+                            Вы уверены, что хотите удалить магазин "{selectedStore}"?
+                        </p>
+                        <div className="flex justify-end space-x-4">
                             <button
                                 onClick={closeModal}
-                                className="bg-gray-300 text-gray-700 p-2 rounded-lg hover:bg-gray-400"
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200"
                                 disabled={isLoading}
                             >
-                                No
+                                Нет
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={isLoading}
                             >
-                                Yes
+                                Да
                             </button>
                         </div>
                     </div>
