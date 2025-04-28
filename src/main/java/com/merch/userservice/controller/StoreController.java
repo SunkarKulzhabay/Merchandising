@@ -1,37 +1,36 @@
 package com.merch.userservice.controller;
+
+import com.merch.userservice.entity.Store;
 import com.merch.userservice.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/stores")
 @RequiredArgsConstructor
 public class StoreController {
-
     private final StoreService storeService;
 
-    @GetMapping("/stores")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String getStores(Model model) {
-        model.addAttribute("stores", storeService.getAllStores());
-        return "stores";
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MERCHANDISER')")
+    public ResponseEntity<?> getStores() {
+        return ResponseEntity.ok(storeService.getAllStores());
     }
 
-    @PostMapping("/add-store")
+
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String addStore(@RequestParam String name) {
-        storeService.addStore(name);
-        return "redirect:/stores";
+    public ResponseEntity<?> addStore(@RequestBody Store store) {
+        storeService.addStore(store.getName());
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/delete-store")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String deleteStore(@RequestParam Long id) {
+    public ResponseEntity<?> deleteStore(@PathVariable Long id) {
         storeService.deleteStoreById(id);
-        return "redirect:/stores";
+        return ResponseEntity.ok().build();
     }
 }

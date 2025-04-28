@@ -25,7 +25,7 @@ public class DataController {
         return ResponseEntity.ok(userRepository.findAll());
     }
 
-    @GetMapping("/stores")
+    @GetMapping("/stores/all")
     @PreAuthorize("hasAnyRole('ADMIN', 'MERCHANDISER')")
     public ResponseEntity<List<Store>> getAllStores() {
         return ResponseEntity.ok(storeRepository.findAll());
