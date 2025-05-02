@@ -27,6 +27,7 @@ public class AuthController {
         User created = userService.register(request);
         return ResponseEntity.ok(created);
     }
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
         String token = userService.login(request.getUsername(), request.getPassword());

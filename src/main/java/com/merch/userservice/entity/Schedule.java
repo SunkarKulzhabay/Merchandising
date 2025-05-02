@@ -3,9 +3,8 @@ package com.merch.userservice.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,10 +19,9 @@ public class Schedule {
     private Store store;
 
     @ElementCollection
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "schedule_days", joinColumns = @JoinColumn(name = "schedule_id"))
+    @CollectionTable(name = "schedules_days_of_week", joinColumns = @JoinColumn(name = "schedule_id"))
     @Column(name = "day_of_week")
-    private Set<DayOfWeek> daysOfWeek;
+    private List<String> daysOfWeek;
 
     @Column(name = "requires_cash_register_photo")
     private boolean requiresCashRegisterPhoto;
@@ -33,4 +31,8 @@ public class Schedule {
 
     @Column(name = "repeat_until")
     private LocalDate repeatUntil;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private User merchandiser;
 }

@@ -5,14 +5,10 @@ import com.merch.userservice.model.Role;
 import com.merch.userservice.entity.User;
 import com.merch.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.merch.userservice.security.JwtService;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -45,8 +41,6 @@ public class UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtService.generateToken(user.getUsername());
+        return jwtService.generateToken(user.getUsername(), user.getRole().name());
     }
-
-    // для логина и аутентификации логика будет через Spring Security
 }
