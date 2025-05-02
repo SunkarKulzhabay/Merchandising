@@ -11,29 +11,37 @@ const SchedulePage = () => {
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
     const [repeatUntil, setRepeatUntil] = useState('');
+    const [merchandisers, setMerchandisers] = useState([]); // Список мерчандайзеров
+    const [selectedMerchandiser, setSelectedMerchandiser] = useState(''); // Выбранный мерчандайзер
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const fetchData = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get('http://localhost:8080/api/stores', {
+                // Загрузка магазинов
+                const storesResponse = await axios.get('http://localhost:8080/api/stores', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                console.log('Stores response:', response.data); // Отладка
-                setStores(response.data);
+                setStores(storesResponse.data);
+
+                // Загрузка мерчандайзеров
+                const merchandisersResponse = await axios.get('http://localhost:8080/api/users/merchandisers', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setMerchandisers(merchandisersResponse.data);
                 setError('');
             } catch (err) {
-                console.error('Error fetching stores:', err); // Отладка
-                setError('Failed to load stores. Check console for details.');
+                console.error('Error fetching data:', err);
+                setError('Failed to load stores or merchandisers. Check console for details.');
             } finally {
                 setIsLoading(false);
             }
         };
         if (token) {
-            fetchStores();
+            fetchData();
         } else {
             setError('No token found. Please log in.');
         }
@@ -80,6 +88,7 @@ const SchedulePage = () => {
                         requiresCashRegisterPhoto: selectedTasks.includes('CASH_PHOTO'),
                         requiresMainZonePhoto: selectedTasks.includes('ZONE_PHOTO'),
                         repeatUntil: repeatUntil,
+                        userId: selectedMerchandiser || null, // Отправляем ID мерчандайзера
                     },
                     {
                         headers: { Authorization: `Bearer ${token}` },
@@ -89,7 +98,7 @@ const SchedulePage = () => {
             setError('');
             navigate('/');
         } catch (err) {
-            console.error('Error creating schedule:', err); // Отладка
+            console.error('Error creating schedule:', err);
             setError('Failed to create schedules. Requires ADMIN role.');
         } finally {
             setIsLoading(false);
@@ -143,7 +152,7 @@ const SchedulePage = () => {
                                 className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             >
                                 {[
-                                    { value: 'CASH_COUNT', label: 'Count Cash Registers' },
+                                    { value: 'CASH_COUNT', label: 'Count Cash двухRegisters' },
                                     { value: 'CASH_PHOTO', label: 'Cash Register Photo' },
                                     { value: 'ZONE_PHOTO', label: 'Main Zone Photo' },
                                 ].map((task) => (
@@ -177,6 +186,22 @@ const SchedulePage = () => {
                                 )}
                             </select>
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Merchandiser</label>
+                        <select
+                            value={selectedMerchandiser}
+                            onChange={(e) => setSelectedMerchandiser(e.target.value)}
+                            className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="">Select a merchandiser</option>
+                            {merchandisers.map((merchandiser) => (
+                                <option key={merchandiser.id} value={merchandiser.id}>
+                                    {merchandiser.fullName}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div>
