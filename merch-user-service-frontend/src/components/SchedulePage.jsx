@@ -11,35 +11,29 @@ const SchedulePage = () => {
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
     const [repeatUntil, setRepeatUntil] = useState('');
-    const [merchandisers, setMerchandisers] = useState([]);
-    const [selectedMerchandiser, setSelectedMerchandiser] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchStores = async () => {
             setIsLoading(true);
             try {
-                const storesResponse = await axios.get('http://localhost:8080/api/stores', {
+                const response = await axios.get('http://localhost:8080/api/stores', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                setStores(storesResponse.data);
-
-                const merchandisersResponse = await axios.get('http://localhost:8080/api/users/merchandisers', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setMerchandisers(merchandisersResponse.data);
+                console.log('Stores response:', response.data); // Отладка
+                setStores(response.data);
                 setError('');
             } catch (err) {
-                console.error('Error fetching data:', err.response?.data || err.message);
-                setError('Failed to load stores or merchandisers. Check console for details.');
+                console.error('Error fetching stores:', err); // Отладка
+                setError('Failed to load stores. Check console for details.');
             } finally {
                 setIsLoading(false);
             }
         };
         if (token) {
-            fetchData();
+            fetchStores();
         } else {
             setError('No token found. Please log in.');
         }
@@ -78,28 +72,25 @@ const SchedulePage = () => {
         setIsLoading(true);
         try {
             for (const storeId of selectedStoreIds) {
-                const scheduleData = {
-                    storeId: Number(storeId),
-                    daysOfWeek: selectedDays,
-                    requiresCashRegisterPhoto: selectedTasks.includes('CASH_PHOTO'),
-                    requiresMainZonePhoto: selectedTasks.includes('ZONE_PHOTO'),
-                    repeatUntil: repeatUntil,
-                    userId: selectedMerchandiser ? Number(selectedMerchandiser) : null,
-                };
-                console.log('Sending schedule data:', scheduleData);
-                await axios.post('http://localhost:8080/api/schedules', scheduleData, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                await axios.post(
+                    'http://localhost:8080/api/schedules',
+                    {
+                        store: { id: storeId },
+                        daysOfWeek: selectedDays,
+                        requiresCashRegisterPhoto: selectedTasks.includes('CASH_PHOTO'),
+                        requiresMainZonePhoto: selectedTasks.includes('ZONE_PHOTO'),
+                        repeatUntil: repeatUntil,
+                    },
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
             }
             setError('');
             navigate('/');
         } catch (err) {
-            console.error('Error creating schedule:', {
-                status: err.response?.status,
-                data: err.response?.data,
-                message: err.message,
-            });
-            setError(`Failed to create schedules: ${err.response?.data || err.message}`);
+            console.error('Error creating schedule:', err); // Отладка
+            setError('Failed to create schedules. Requires ADMIN role.');
         } finally {
             setIsLoading(false);
         }
@@ -186,22 +177,6 @@ const SchedulePage = () => {
                                 )}
                             </select>
                         </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Merchandiser</label>
-                        <select
-                            value={selectedMerchandiser}
-                            onChange={(e) => setSelectedMerchandiser(e.target.value)}
-                            className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">Select a merchandiser</option>
-                            {merchandisers.map((merchandiser) => (
-                                <option key={merchandiser.id} value={merchandiser.id}>
-                                    {merchandiser.fullName}
-                                </option>
-                            ))}
-                        </select>
                     </div>
 
                     <div>
